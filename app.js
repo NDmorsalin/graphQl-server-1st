@@ -4,6 +4,7 @@
 const express = require('express');
 const { graphqlHTTP } = require('express-graphql');
 require('dotenv').config();
+const cors = require('cors');
 
 // internal modules
 const schema = require('./Schema/schema');
@@ -11,6 +12,12 @@ const db = require('./db/remote');
 
 // express app
 const app = express();
+
+app.use(
+    cors({
+        origin: '*',
+    })
+);
 
 // connect db
 db();
