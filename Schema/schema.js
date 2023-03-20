@@ -8,7 +8,6 @@ const {
     GraphQLNonNull,
     GraphQLEnumType,
 } = require('graphql');
-const { clients, projects } = require('../db/db');
 
 const Client = require('../Model/clients/client');
 const Project = require('../Model/projects/project');
@@ -48,6 +47,7 @@ const RootQueryType = new GraphQLObjectType({
             type: ClientsType,
             args: { id: { type: GraphQLID } },
             resolve(parent, arg) {
+                console.log(arg);
                 return Client.findById(arg.id);
             },
         },
@@ -93,6 +93,33 @@ const mutation = new GraphQLObjectType({
                 });
                 await client.save();
                 return client;
+            },
+        },
+        updateClient: {
+            type: ClientsType,
+            args: {
+                id: { type: new GraphQLNonNull(GraphQLID) },
+                name: { type: GraphQLString },
+                email: { type: GraphQLString },
+                phone: { type: GraphQLString },
+            },
+            async resolve(parent, args) {
+                console.log('rachked ', args);
+                const updatedClient = await Client.findByIdAndUpdate(
+                    args.id,
+                    {
+                        $set: {
+                            name: args.name,
+                            email: args.email,
+                            phone: args.phone,
+                        },
+                    },
+                    {
+                        new: true,
+                    }
+                );
+
+                return updatedClient;
             },
         },
         // delete Client
