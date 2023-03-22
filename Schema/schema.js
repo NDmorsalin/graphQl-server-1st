@@ -129,6 +129,11 @@ const mutation = new GraphQLObjectType({
                 id: { type: new GraphQLNonNull(GraphQLID) },
             },
             async resolve(parent, args) {
+                const projects = await Project.find({ clientId: args.id });
+                projects.forEach(async (project) => {
+                    await project.deleteOne();
+                });
+
                 const deleted = await Client.findByIdAndRemove(args.id);
                 return deleted;
             },
@@ -167,7 +172,7 @@ const mutation = new GraphQLObjectType({
 
         deleteProject: {
             type: ProjectsType,
-            args: { id: { type: GraphQLID } },
+            args: { id: { type: new GraphQLNonNull(GraphQLID) } },
             async resolve(parent, args) {
                 const deletedProject = await Project.findByIdAndRemove(args.id);
 
