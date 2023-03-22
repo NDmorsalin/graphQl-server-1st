@@ -150,7 +150,7 @@ const mutation = new GraphQLObjectType({
                     }),
                     defaultValue: 'Not Started',
                 },
-                clientId: { type: new GraphQLNonNull(GraphQLString) },
+                clientId: { type: new GraphQLNonNull(GraphQLID) },
             },
             async resolve(parent, args) {
                 const project = new Project({
@@ -164,6 +164,7 @@ const mutation = new GraphQLObjectType({
                 return project;
             },
         },
+
         deleteProject: {
             type: ProjectsType,
             args: { id: { type: GraphQLID } },
@@ -173,6 +174,7 @@ const mutation = new GraphQLObjectType({
                 return deletedProject;
             },
         },
+
         updateProject: {
             type: ProjectsType,
             args: {
